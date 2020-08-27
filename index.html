@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Realtime communication with WebRTC</title>
+
+</head>
+
+<body>
+  <link rel="stylesheet" href="/css/main.css" />
+  <br>
+  <h1 class="text-center font-italic"><strong>SMILE</strong> video chat app</h1>
+  <br>
+
+  <div id="videos">
+    <center>
+    <video id="remoteVideo" controls autoplay poster="https://dmhgprodsc9-cdn.azureedge.net/-/media/dmhg/topic-page-og-images/connecting-friends-fb.ashx?rev=3aa48f5bb10145ee87b0f450202f4b8c&hash=D065ADE142DA00AEE5B6162FF99DBD44"></video>
+    <br><br>
+    <video id="localVideo" autoplay muted></video>
+    </center>
+</div>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/main.js"></script>
+  
+</body>
+
+</html>
