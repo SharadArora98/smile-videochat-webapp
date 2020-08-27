@@ -94,16 +94,16 @@ var remoteVideo = document.querySelector('#remoteVideo');
 
 
 navigator.mediaDevices.getUserMedia({
-  audio: false,
+  audio: true,
   video: true,
-  video: {
-    width: {
+  /*video: {
+   // width: {
       min: 1280
     },
     height: {
       min: 720
     }
-  }
+  }*/
 })
 .then(gotStream)
 .catch(function(e) {
