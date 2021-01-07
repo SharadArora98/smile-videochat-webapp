@@ -9,7 +9,7 @@ var fileServer = new(nodeStatic.Server)();
 var app = http.createServer(function(req, res) {
   fileServer.serve(req, res);
 })
-app.listen(process.env.PORT);
+app.listen(process.env.PORT || 8080);
 
 var io = socketIO.listen(app);
 io.sockets.on('connection', function(socket) {
