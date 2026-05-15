@@ -1,22 +1,23 @@
-//'use strict';
+'use strict';
 
-var os = require('os');
-var nodeStatic = require('node-static');
-var http = require('http');
-var socketIO = require('socket.io');
+const os = require('os');
+const nodeStatic = require('node-static');
+const http = require('http');
+const { Server } = require('socket.io');
 
-var fileServer = new(nodeStatic.Server)();
-var app = http.createServer(function(req, res) {
+const fileServer = new(nodeStatic.Server)();
+const app = http.createServer(function(req, res) {
   fileServer.serve(req, res);
-})
-app.listen(process.env.PORT || 8080);
+});
+const port = process.env.PORT || 8080;
+app.listen(port);
 
-var io = socketIO.listen(app);
+const io = new Server(app);
 io.sockets.on('connection', function(socket) {
 
   // convenience function to log server messages on the client
   function log() {
-    var array = ['Message from server:'];
+    const array = ['Message from server:'];
     array.push.apply(array, arguments);
     socket.emit('log', array);
   }
@@ -30,8 +31,8 @@ io.sockets.on('connection', function(socket) {
   socket.on('create or join', function(room) {
     log('Received request to create or join room ' + room);
 
-    var clientsInRoom = io.sockets.adapter.rooms[room];
-    var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
+    const clientsInRoom = io.sockets.adapter.rooms.get(room);
+    const numClients = clientsInRoom ? clientsInRoom.size : 0;
     log('Room ' + room + ' now has ' + numClients + ' client(s)');
 
     if (numClients === 0) {
@@ -51,8 +52,8 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('ipaddr', function() {
-    var ifaces = os.networkInterfaces();
-    for (var dev in ifaces) {
+    const ifaces = os.networkInterfaces();
+    for (const dev in ifaces) {
       ifaces[dev].forEach(function(details) {
         if (details.family === 'IPv4' && details.address !== '127.0.0.1') {
           socket.emit('ipaddr', details.address);

@@ -1,31 +1,31 @@
-//'use strict';
+'use strict';
 
-var isChannelReady = false;
-var isInitiator = false;
-var isStarted = false;
-var localStream;
-var pc;
-var remoteStream;
-var turnReady;
+let isChannelReady = false;
+let isInitiator = false;
+let isStarted = false;
+let localStream;
+let pc;
+let remoteStream;
+let turnReady;
 
-var pcConfig = {
+const pcConfig = {
   'iceServers': [{
     'urls': 'stun:stun.l.google.com:19302'
   }]
 };
 
 // Set up audio and video regardless of what devices are present.
-var sdpConstraints = {
+const sdpConstraints = {
   offerToReceiveAudio: true,
   offerToReceiveVideo: true
 };
 
 /////////////////////////////////////////////
-//var room = 'foo';
+//const room = 'foo';
  //Could prompt for room name:
-var room = prompt('Enter room name:');
+const room = prompt('Enter room name:');
 
-var socket = io.connect();
+const socket = io.connect();
 
 if (room !== '') {
   socket.emit('create or join', room);
@@ -77,7 +77,7 @@ socket.on('message', function(message) {
   } else if (message.type === 'answer' && isStarted) {
     pc.setRemoteDescription(new RTCSessionDescription(message));
   } else if (message.type === 'candidate' && isStarted) {
-    var candidate = new RTCIceCandidate({
+    const candidate = new RTCIceCandidate({
       sdpMLineIndex: message.label,
       candidate: message.candidate
     });
@@ -89,21 +89,13 @@ socket.on('message', function(message) {
 
 ////////////////////////////////////////////////////
 
-var localVideo = document.querySelector('#localVideo');
-var remoteVideo = document.querySelector('#remoteVideo');
+const localVideo = document.querySelector('#localVideo');
+const remoteVideo = document.querySelector('#remoteVideo');
 
 
 navigator.mediaDevices.getUserMedia({
   audio: true,
-  video: true,
-  /*video: {
-   // width: {
-      min: 1280
-    },
-    height: {
-      min: 720
-    }
-  }*/
+  video: true
 })
 .then(gotStream)
 .catch(function(e) {
@@ -120,7 +112,7 @@ function gotStream(stream) {
   }
 }
 
-var constraints = {
+const constraints = {
   video: true
 };
 
@@ -137,7 +129,7 @@ function maybeStart() {
   if (!isStarted && typeof localStream !== 'undefined' && isChannelReady) {
     console.log('>>>>>> creating peer connection');
     createPeerConnection();
-    pc.addStream(localStream);
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
     isStarted = true;
     console.log('isInitiator', isInitiator);
     if (isInitiator) {
@@ -156,7 +148,7 @@ function createPeerConnection() {
   try {
     pc = new RTCPeerConnection(null);
     pc.onicecandidate = handleIceCandidate;
-    pc.onaddstream = handleRemoteStreamAdded;
+    pc.ontrack = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
     console.log('Created RTCPeerConnnection');
   } catch (e) {
@@ -204,12 +196,12 @@ function setLocalAndSendMessage(sessionDescription) {
 }
 
 function onCreateSessionDescriptionError(error) {
-  trace('Failed to create session description: ' + error.toString());
+  console.error('Failed to create session description: ' + error.toString());
 }
 
 function requestTurn(turnURL) {
-  var turnExists = false;
-  for (var i in pcConfig.iceServers) {
+  let turnExists = false;
+  for (const i in pcConfig.iceServers) {
     if (pcConfig.iceServers[i].urls.substr(0, 5) === 'turn:') {
       turnExists = true;
       turnReady = true;
@@ -219,10 +211,10 @@ function requestTurn(turnURL) {
   if (!turnExists) {
     console.log('Getting TURN server from ', turnURL);
     // No TURN server. Get one from computeengineondemand.appspot.com:
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        var turnServer = JSON.parse(xhr.responseText);
+        const turnServer = JSON.parse(xhr.responseText);
         console.log('Got TURN server: ', turnServer);
         pcConfig.iceServers.push({
           'urls': 'turn:' + turnServer.username + '@' + turnServer.turn,
@@ -238,9 +230,8 @@ function requestTurn(turnURL) {
 
 function handleRemoteStreamAdded(event) {
   console.log('Remote stream added.');
-  remoteStream = event.stream;
+  remoteStream = event.streams[0];
   remoteVideo.srcObject = remoteStream;
-	
 }
 
 function handleRemoteStreamRemoved(event) {
