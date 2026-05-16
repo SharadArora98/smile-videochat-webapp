@@ -1,5 +1,10 @@
 'use strict';
 
+import { io } from 'socket.io-client';
+import 'webrtc-adapter';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/main.css';
+
 let isChannelReady = false;
 let isInitiator = false;
 let isStarted = false;
@@ -21,11 +26,9 @@ const sdpConstraints = {
 };
 
 /////////////////////////////////////////////
-//const room = 'foo';
- //Could prompt for room name:
 const room = prompt('Enter room name:');
 
-const socket = io.connect();
+const socket = io(); // Connects to the same host as the page
 
 if (room !== '') {
   socket.emit('create or join', room);
