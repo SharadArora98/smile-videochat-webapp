@@ -4,6 +4,8 @@ const os = require('os');
 
 function initSignaling(io) {
   io.sockets.on('connection', function(socket) {
+    let currentRoom = '';
+
     function log() {
       const array = ['Message from server:'];
       array.push.apply(array, arguments);
@@ -12,11 +14,16 @@ function initSignaling(io) {
 
     socket.on('message', function(message) {
       log('Client said: ', message);
-      socket.broadcast.emit('message', message);
+      if (currentRoom) {
+        // Send to everyone in the room except the sender
+        socket.to(currentRoom).emit('message', message);
+      }
     });
 
     socket.on('create or join', function(room) {
       log('Received request to create or join room ' + room);
+      currentRoom = room;
+
       const clientsInRoom = io.sockets.adapter.rooms.get(room);
       const numClients = clientsInRoom ? clientsInRoom.size : 0;
       log('Room ' + room + ' now has ' + numClients + ' client(s)');
@@ -49,6 +56,10 @@ function initSignaling(io) {
 
     socket.on('bye', function(){
       console.log('received bye');
+    });
+    
+    socket.on('disconnect', () => {
+       console.log('socket disconnected');
     });
   });
 }

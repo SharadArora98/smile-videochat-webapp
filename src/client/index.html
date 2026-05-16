@@ -1,25 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
-  <title>Realtime communication with WebRTC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMILE - Modern Video Chat</title>
 </head>
 
-<body>
-  <br>
-  <h1 class="text-center font-italic"><strong>SMILE</strong> video chat app</h1>
-  <br>
+<body class="bg-dark text-white">
 
-  <div id="videos">
-    <center>
-    <video id="remoteVideo" controls autoplay poster="https://dmhgprodsc9-cdn.azureedge.net/-/media/dmhg/topic-page-og-images/connecting-friends-fb.ashx?rev=3aa48f5bb10145ee87b0f450202f4b8c&hash=D065ADE142DA00AEE5B6162FF99DBD44"></video>
-    <br><br>
-    <video id="localVideo" autoplay muted></video>
-    </center>
+  <!-- Room Entry Screen -->
+  <div id="room-entry" class="container vh-100 d-flex align-items-center justify-content-center">
+    <div class="card bg-secondary text-white p-4 shadow-lg" style="width: 400px;">
+      <h1 class="text-center mb-4">SMILE</h1>
+      <p class="text-center text-light">Enter a room name to start chatting.</p>
+      <div class="form-group">
+        <input type="text" id="roomInput" class="form-control form-control-lg mb-3" placeholder="Room name..." autofocus>
+        <button id="joinBtn" class="btn btn-primary btn-lg btn-block w-100">Join Room</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Chat Interface (Hidden initially) -->
+  <div id="main-app" class="d-none vh-100 d-flex flex-column">
+    
+    <!-- Header -->
+    <header class="p-3 border-bottom border-secondary d-flex justify-content-between align-items-center bg-dark">
+      <h3 class="m-0">SMILE <small class="text-muted" id="roomDisplayName"></small></h3>
+      <button id="hangupBtn" class="btn btn-danger">Leave</button>
+    </header>
+
+    <div class="flex-grow-1 d-flex overflow-hidden">
+      <!-- Video Grid Area -->
+      <div class="flex-grow-1 position-relative d-flex flex-column">
+        <main class="flex-grow-1 p-3 d-flex flex-column align-items-center justify-content-center bg-black">
+          <div id="video-grid" class="w-100 h-100 d-flex flex-wrap justify-content-center align-items-center gap-3">
+            <div class="video-container shadow">
+              <video id="remoteVideo" autoplay playsinline poster="https://dmhgprodsc9-cdn.azureedge.net/-/media/dmhg/topic-page-og-images/connecting-friends-fb.ashx?rev=3aa48f5bb10145ee87b0f450202f4b8c&hash=D065ADE142DA00AEE5B6162FF99DBD44"></video>
+              <div class="video-label">Remote</div>
+            </div>
+            <div class="video-container shadow">
+              <video id="localVideo" autoplay muted playsinline></video>
+              <div class="video-label">You</div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Controls Bar - Now scoped to video area -->
+        <footer class="p-3 bg-dark border-top border-secondary d-flex justify-content-center gap-4">
+          <button id="muteAudioBtn" class="btn btn-outline-light rounded-circle p-3"><i class="bi bi-mic"></i></button>
+          <button id="stopVideoBtn" class="btn btn-outline-light rounded-circle p-3"><i class="bi bi-camera-video"></i></button>
+        </footer>
+      </div>
+
+      <!-- Chat Sidebar -->
+      <aside id="chat-sidebar" class="bg-secondary d-flex flex-column border-start border-dark" style="width: 350px;">
+        <div class="p-3 border-bottom border-dark">
+          <h5 class="m-0">Messages</h5>
+        </div>
+        <div id="chat-messages" class="flex-grow-1 p-3 overflow-auto">
+          <!-- Messages will appear here -->
+        </div>
+        <div class="p-3 bg-dark">
+          <div class="input-group">
+            <input type="text" id="chatInput" class="form-control" placeholder="Type a message...">
+            <button id="sendBtn" class="btn btn-primary">Send</button>
+          </div>
+        </div>
+      </aside>
+    </div>
   </div>
 
   <script type="module" src="./js/main.js"></script>
+  <!-- Bootstrap Icons for the footer buttons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </body>
 
 </html>
