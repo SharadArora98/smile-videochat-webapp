@@ -11,10 +11,9 @@ function createServer(port) {
   // Serve static files from the /dist directory
   app.use(express.static(publicPath));
 
-  // Catch-all route for Single Page App (optional, but good practice)
-  app.get('*', (req, res, next) => {
-    // If it's not a static file, we can either 404 or serve index.html
-    // For this app, let Express handle it.
+  // Catch-all route for Single Page App (compatible with Express 5)
+  // Express 5 requires parentheses for wildcards like (.*)
+  app.get('(.*)', (req, res, next) => {
     next();
   });
 
