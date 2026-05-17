@@ -9,7 +9,15 @@ function createServer(port) {
   const fileServer = new nodeStatic.Server(publicPath);
   
   const app = http.createServer(function(req, res) {
-    fileServer.serve(req, res);
+    fileServer.serve(req, res, function (err, result) {
+      if (err) {
+        console.error('Error serving ' + req.url + ' - ' + err.message);
+        if (!res.headersSent) {
+          res.writeHead(err.status, err.headers);
+          res.end();
+        }
+      }
+    });
   });
 
   app.listen(port, () => {
