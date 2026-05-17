@@ -7,9 +7,10 @@
     "dev": "vite src/client",
     "build": "vite build src/client --outDir ../../dist",
     "preview": "vite preview src/client"
-  },  "dependencies": {
+  },
+  "dependencies": {
     "bootstrap": "^5.3.8",
-    "node-static": "^0.7.11",
+    "express": "^5.2.1",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.8.3",
     "webrtc-adapter": "^9.0.5"
