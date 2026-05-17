@@ -44,7 +44,7 @@ You can run the entire application using Docker to ensure environment parity:
 ## CI/CD & Deployment
 This project uses **GitHub Actions** for Continuous Integration and Continuous Deployment.
 
-- **Pipeline:** On every push to `main`, a workflow builds a multi-stage Docker image and pushes it to **GitHub Container Registry (GHCR)**.
+- **Pipeline:** On every push to `master`, a workflow builds a multi-stage Docker image and pushes it to **GitHub Container Registry (GHCR)**.
 - **Security:** Utilizes scoped `GITHUB_TOKEN` permissions for secure, automated authentication.
 
 ## 📄 License
